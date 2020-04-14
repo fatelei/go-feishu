@@ -2,20 +2,18 @@ package room
 
 import (
 	"encoding/json"
-	auth2 "github.com/fatelei/go-feishu/pkg/auth"
 	"github.com/fatelei/go-feishu/pkg/model"
 	transport2 "github.com/fatelei/go-feishu/pkg/transport"
 )
 
 type RoomAPI struct {
-	auth      *auth2.Auth
 	transport *transport2.Transport
+	accessToken *model.AccessToken
 }
 
-func NewRoomAPI(appID string, appSecret string, endPoint string) *RoomAPI {
-	auth := auth2.NewAuth(appID, appSecret, endPoint)
+func NewRoomAPI(endPoint string, accessToken *model.AccessToken) *RoomAPI {
 	transport := &transport2.Transport{Endpoint:endPoint}
-	return &RoomAPI{auth:auth, transport:transport}
+	return &RoomAPI{accessToken: accessToken, transport:transport}
 }
 
 
@@ -26,7 +24,7 @@ func (p *RoomAPI) ListChatRoom(pageToken string, pageSize string) (*model.ListRo
 	if len(pageToken) > 0 {
 		param["page_token"] = pageToken
 	}
-	body, err := p.transport.Get("/open-apis/chat/v4/list", &param, p.auth.GetAccessToken())
+	body, err := p.transport.Get("/open-apis/chat/v4/list", &param, p.accessToken.Token)
 	if err != nil {
 		return nil, err
 	}

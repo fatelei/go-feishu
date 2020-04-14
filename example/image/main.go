@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	auth2 "github.com/fatelei/go-feishu/pkg/auth"
 	"github.com/fatelei/go-feishu/pkg/image"
 	"os"
 )
@@ -10,8 +11,10 @@ import (
 func main() {
 	var appID string
 	var appSecret string
+	var endpoint string
 	flag.StringVar(&appID, "app_id", "", "app id")
 	flag.StringVar(&appSecret, "app_secret", "", "app secrect")
+	flag.StringVar(&endpoint, "endpoint", "https://open.feishu.cn", "endpoint")
 	flag.Parse()
 
 	if len(appID) == 0 || len(appSecret) == 0 {
@@ -19,7 +22,9 @@ func main() {
 		return
 	}
 
-	imageApi := image.NewImageAPI(appID, appSecret, "https://open.feishu.cn")
+	auth := auth2.NewAuth(appID, appSecret, endpoint)
+	accessToken := auth.GetAccessToken()
+	imageApi := image.NewImageAPI(endpoint, accessToken)
 	resp, _ := imageApi.UploadFromUri("http://i.imgur.com/Dz2r9lk.jpg")
 	fmt.Printf("%v\n", resp)
 

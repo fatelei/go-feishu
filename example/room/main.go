@@ -3,14 +3,17 @@ package main
 import (
 	"flag"
 	"fmt"
+	auth2 "github.com/fatelei/go-feishu/pkg/auth"
 	room2 "github.com/fatelei/go-feishu/pkg/room"
 )
 
 func main() {
 	var appID string
 	var appSecret string
+	var endpoint string
 	flag.StringVar(&appID, "app_id", "", "app id")
 	flag.StringVar(&appSecret, "app_secret", "", "app secrect")
+	flag.StringVar(&endpoint, "endpoint", "https://open.feishu.cn", "endpoint")
 	flag.Parse()
 
 	if len(appID) == 0 || len(appSecret) == 0 {
@@ -18,7 +21,9 @@ func main() {
 		return
 	}
 
-	room := room2.NewRoomAPI(appID, appSecret, "https://open.feishu.cn")
+	auth := auth2.NewAuth(appID, appSecret, endpoint)
+	accessToken := auth.GetAccessToken()
+	room := room2.NewRoomAPI(endpoint, accessToken)
 	resp, _ := room.ListChatRoom("", "100")
 	fmt.Printf("%+v\n", resp.Data)
 	if resp.Data != nil {

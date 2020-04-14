@@ -26,7 +26,7 @@ func NewAuth(appID string, appSecret string, endPoint string) *Auth {
 }
 
 
-func (p *Auth) GetAccessToken() string {
+func (p *Auth) GetAccessToken() *model.AccessToken {
 	flag := false
 	if p.accessToken == nil {
 		flag = true
@@ -45,7 +45,7 @@ func (p *Auth) GetAccessToken() string {
 			p.accessToken = tmp
 		}
 	}
-	return p.accessToken.Token
+	return p.accessToken
 }
 
 func (p *Auth) generateParam() map[string]interface{} {

@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	auth2 "github.com/fatelei/go-feishu/pkg/auth"
 	"github.com/fatelei/go-feishu/pkg/model"
 	"io"
 	"io/ioutil"
@@ -15,13 +14,12 @@ import (
 )
 
 type ImageAPI struct {
-	auth *auth2.Auth
 	endpoint string
+	accessToken *model.AccessToken
 }
 
-func NewImageAPI(appID string, appSecret string, endPoint string) *ImageAPI {
-	auth := auth2.NewAuth(appID, appSecret, endPoint)
-	return &ImageAPI{auth:auth, endpoint:endPoint}
+func NewImageAPI(endPoint string, accessToken *model.AccessToken) *ImageAPI {
+	return &ImageAPI{endpoint:endPoint, accessToken: accessToken}
 }
 
 
@@ -63,7 +61,7 @@ func (p *ImageAPI) do(binary io.Reader) (*model.Image, error) {
 	url := fmt.Sprintf("%s/open-apis/image/v4/put", p.endpoint)
 	request, err := http.NewRequest("POST", url, body)
 	request.Header.Set("Content-Type", writer.FormDataContentType())
-	request.Header.Set("Authorization", fmt.Sprintf("Bearer %s", p.auth.GetAccessToken()))
+	request.Header.Set("Authorization", fmt.Sprintf("Bearer %s", p.accessToken.Token))
 	client := http.Client{}
 	response, err := client.Do(request)
 	if err != nil {

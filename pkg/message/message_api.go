@@ -3,22 +3,20 @@ package message
 import (
 	"encoding/json"
 	"fmt"
-	auth2 "github.com/fatelei/go-feishu/pkg/auth"
 	"github.com/fatelei/go-feishu/pkg/model"
 	model2 "github.com/fatelei/go-feishu/pkg/model/interactive"
 	transport2 "github.com/fatelei/go-feishu/pkg/transport"
 )
 
 type MessageAPI struct {
-	auth *auth2.Auth
 	transport *transport2.Transport
+	accessToken *model.AccessToken
 }
 
 
-func NewMessageAPI(appID string, appSecret string, endPoint string) *MessageAPI {
-	auth := auth2.NewAuth(appID, appSecret, endPoint)
+func NewMessageAPI(endPoint string, accessToken *model.AccessToken) *MessageAPI {
 	transport := &transport2.Transport{Endpoint:endPoint}
-	return &MessageAPI{auth:auth, transport:transport}
+	return &MessageAPI{transport:transport, accessToken: accessToken}
 }
 
 
@@ -51,7 +49,7 @@ func (p *MessageAPI) SendImage(
 	if byte, err := json.Marshal(&body); err == nil {
 		fmt.Printf("%s\n", string(byte))
 	}
-	resp, err := p.transport.Post("/open-apis/message/v4/send", &body, p.auth.GetAccessToken())
+	resp, err := p.transport.Post("/open-apis/message/v4/send", &body, p.accessToken.Token)
 	if err != nil {
 		return nil, err
 	}
