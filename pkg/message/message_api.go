@@ -58,3 +58,26 @@ func (p *MessageAPI) SendImage(
 	}
 	return data, nil
 }
+
+func (p *MessageAPI) SendInteractiveCard(
+	chatId string, title string, elements []interface{}, accessToken string) (*model.MessageAPIResponse, error) {
+	messageCard := model2.MessageCard{
+		Elements: elements,
+	}
+	body := make(map[string]interface{})
+	body["open_chat_id"] = chatId
+	body["msg_type"] = "interactive"
+	body["card"] = messageCard
+	if byte, err := json.Marshal(&body); err == nil {
+		fmt.Printf("%s\n", string(byte))
+	}
+	resp, err := p.transport.Post("/open-apis/message/v4/send", &body, accessToken)
+	if err != nil {
+		return nil, err
+	}
+	data := &model.MessageAPIResponse{}
+	if err := json.Unmarshal(resp, data); err != nil {
+		return nil, err
+	}
+	return data, nil
+}
