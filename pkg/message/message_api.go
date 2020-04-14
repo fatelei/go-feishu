@@ -10,11 +10,11 @@ import (
 
 type MessageAPI struct {
 	transport *transport2.Transport
-	accessToken *model.AccessToken
+	accessToken string
 }
 
 
-func NewMessageAPI(endPoint string, accessToken *model.AccessToken) *MessageAPI {
+func NewMessageAPI(endPoint string, accessToken string) *MessageAPI {
 	transport := &transport2.Transport{Endpoint:endPoint}
 	return &MessageAPI{transport:transport, accessToken: accessToken}
 }
@@ -49,7 +49,7 @@ func (p *MessageAPI) SendImage(
 	if byte, err := json.Marshal(&body); err == nil {
 		fmt.Printf("%s\n", string(byte))
 	}
-	resp, err := p.transport.Post("/open-apis/message/v4/send", &body, p.accessToken.Token)
+	resp, err := p.transport.Post("/open-apis/message/v4/send", &body, p.accessToken)
 	if err != nil {
 		return nil, err
 	}

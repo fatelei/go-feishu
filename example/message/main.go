@@ -28,7 +28,7 @@ func main() {
 
 	auth := auth2.NewAuth(appID, appSecret, endpoint)
 	accessToken := auth.GetAccessToken()
-	message := message2.NewMessageAPI(endpoint, accessToken)
+	message := message2.NewMessageAPI(endpoint, accessToken.Token)
 	button := model.ButtonModule{
 		Tag:   "button",
 		Text:  &model.TextModule{Tag: "plain_text", Content: "测试"},

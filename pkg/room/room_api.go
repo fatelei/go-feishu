@@ -8,10 +8,10 @@ import (
 
 type RoomAPI struct {
 	transport *transport2.Transport
-	accessToken *model.AccessToken
+	accessToken string
 }
 
-func NewRoomAPI(endPoint string, accessToken *model.AccessToken) *RoomAPI {
+func NewRoomAPI(endPoint string, accessToken string) *RoomAPI {
 	transport := &transport2.Transport{Endpoint:endPoint}
 	return &RoomAPI{accessToken: accessToken, transport:transport}
 }
@@ -24,7 +24,7 @@ func (p *RoomAPI) ListChatRoom(pageToken string, pageSize string) (*model.ListRo
 	if len(pageToken) > 0 {
 		param["page_token"] = pageToken
 	}
-	body, err := p.transport.Get("/open-apis/chat/v4/list", &param, p.accessToken.Token)
+	body, err := p.transport.Get("/open-apis/chat/v4/list", &param, p.accessToken)
 	if err != nil {
 		return nil, err
 	}

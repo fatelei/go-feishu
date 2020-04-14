@@ -15,10 +15,10 @@ import (
 
 type ImageAPI struct {
 	endpoint string
-	accessToken *model.AccessToken
+	accessToken string
 }
 
-func NewImageAPI(endPoint string, accessToken *model.AccessToken) *ImageAPI {
+func NewImageAPI(endPoint string, accessToken string) *ImageAPI {
 	return &ImageAPI{endpoint:endPoint, accessToken: accessToken}
 }
 
@@ -61,7 +61,7 @@ func (p *ImageAPI) do(binary io.Reader) (*model.Image, error) {
 	url := fmt.Sprintf("%s/open-apis/image/v4/put", p.endpoint)
 	request, err := http.NewRequest("POST", url, body)
 	request.Header.Set("Content-Type", writer.FormDataContentType())
-	request.Header.Set("Authorization", fmt.Sprintf("Bearer %s", p.accessToken.Token))
+	request.Header.Set("Authorization", fmt.Sprintf("Bearer %s", p.accessToken))
 	client := http.Client{}
 	response, err := client.Do(request)
 	if err != nil {

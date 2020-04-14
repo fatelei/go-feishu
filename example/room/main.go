@@ -23,7 +23,7 @@ func main() {
 
 	auth := auth2.NewAuth(appID, appSecret, endpoint)
 	accessToken := auth.GetAccessToken()
-	room := room2.NewRoomAPI(endpoint, accessToken)
+	room := room2.NewRoomAPI(endpoint, accessToken.Token)
 	resp, _ := room.ListChatRoom("", "100")
 	fmt.Printf("%+v\n", resp.Data)
 	if resp.Data != nil {

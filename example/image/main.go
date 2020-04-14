@@ -24,7 +24,7 @@ func main() {
 
 	auth := auth2.NewAuth(appID, appSecret, endpoint)
 	accessToken := auth.GetAccessToken()
-	imageApi := image.NewImageAPI(endpoint, accessToken)
+	imageApi := image.NewImageAPI(endpoint, accessToken.Token)
 	resp, _ := imageApi.UploadFromUri("http://i.imgur.com/Dz2r9lk.jpg")
 	fmt.Printf("%v\n", resp)
 
