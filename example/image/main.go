@@ -24,11 +24,11 @@ func main() {
 
 	auth := auth2.NewAuth(appID, appSecret, endpoint)
 	accessToken := auth.GetAccessToken()
-	imageApi := image.NewImageAPI(endpoint, accessToken.Token)
-	resp, _ := imageApi.UploadFromUri("http://i.imgur.com/Dz2r9lk.jpg")
+	imageApi := image.NewImageAPI(endpoint)
+	resp, _ := imageApi.UploadFromUri("http://i.imgur.com/Dz2r9lk.jpg", accessToken.Token)
 	fmt.Printf("%v\n", resp)
 
 	dir, _ := os.Getwd()
-	resp, _ = imageApi.UploadFromFile(fmt.Sprintf("%s/example/image/test.jpg", dir))
+	resp, _ = imageApi.UploadFromFile(fmt.Sprintf("%s/example/image/test.jpg", dir), accessToken.Token)
 	fmt.Printf("%v\n", resp)
 }

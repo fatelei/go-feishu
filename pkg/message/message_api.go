@@ -10,18 +10,17 @@ import (
 
 type MessageAPI struct {
 	transport *transport2.Transport
-	accessToken string
 }
 
 
-func NewMessageAPI(endPoint string, accessToken string) *MessageAPI {
+func NewMessageAPI(endPoint string) *MessageAPI {
 	transport := &transport2.Transport{Endpoint:endPoint}
-	return &MessageAPI{transport:transport, accessToken: accessToken}
+	return &MessageAPI{transport:transport}
 }
 
 
 func (p *MessageAPI) SendImage(
-	chatId string, title string, imgKey string, action *model2.ActionModule) (*model.MessageAPIResponse, error) {
+	chatId string, title string, imgKey string, action *model2.ActionModule, accessToken string) (*model.MessageAPIResponse, error) {
 	imageModule := model2.ImageModule{
 		Tag:    "img",
 		ImgKey: imgKey,
@@ -49,7 +48,7 @@ func (p *MessageAPI) SendImage(
 	if byte, err := json.Marshal(&body); err == nil {
 		fmt.Printf("%s\n", string(byte))
 	}
-	resp, err := p.transport.Post("/open-apis/message/v4/send", &body, p.accessToken)
+	resp, err := p.transport.Post("/open-apis/message/v4/send", &body, accessToken)
 	if err != nil {
 		return nil, err
 	}

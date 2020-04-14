@@ -28,7 +28,7 @@ func main() {
 
 	auth := auth2.NewAuth(appID, appSecret, endpoint)
 	accessToken := auth.GetAccessToken()
-	message := message2.NewMessageAPI(endpoint, accessToken.Token)
+	message := message2.NewMessageAPI(endpoint)
 	button := model.ButtonModule{
 		Tag:   "button",
 		Text:  &model.TextModule{Tag: "plain_text", Content: "测试"},
@@ -39,5 +39,5 @@ func main() {
 		Tag:     "action",
 		Actions: []model.Interactive{button},
 	}
-	message.SendImage(chatID, "测试", imgKey, actionModule)
+	message.SendImage(chatID, "测试", imgKey, actionModule, accessToken.Token)
 }

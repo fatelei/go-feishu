@@ -15,37 +15,36 @@ import (
 
 type ImageAPI struct {
 	endpoint string
-	accessToken string
 }
 
-func NewImageAPI(endPoint string, accessToken string) *ImageAPI {
-	return &ImageAPI{endpoint:endPoint, accessToken: accessToken}
+func NewImageAPI(endPoint string) *ImageAPI {
+	return &ImageAPI{endpoint:endPoint}
 }
 
 
-func (p *ImageAPI) UploadFromFile(filePath string) (*model.Image, error) {
+func (p *ImageAPI) UploadFromFile(filePath string, accessToken string) (*model.Image, error) {
 	file, err := os.Open(filePath)
 	if err != nil {
 		log.Fatal(err)
 		return nil, err
 	}
 	defer file.Close()
-	return p.do(file)
+	return p.do(file, accessToken)
 }
 
 
-func (p *ImageAPI) UploadFromUri(imageUri string) (*model.Image, error) {
+func (p *ImageAPI) UploadFromUri(imageUri string, accessToken string) (*model.Image, error) {
 	resp, err := http.Get(imageUri)
 	if err != nil {
 		log.Fatal(err)
 		return nil, err
 	}
 	defer resp.Body.Close()
-	return p.do(resp.Body)
+	return p.do(resp.Body, accessToken)
 }
 
 
-func (p *ImageAPI) do(binary io.Reader) (*model.Image, error) {
+func (p *ImageAPI) do(binary io.Reader, accessToken string) (*model.Image, error) {
 	body := &bytes.Buffer{}
 	writer := multipart.NewWriter(body)
 	part, err := writer.CreateFormFile("image", "image")
@@ -61,7 +60,7 @@ func (p *ImageAPI) do(binary io.Reader) (*model.Image, error) {
 	url := fmt.Sprintf("%s/open-apis/image/v4/put", p.endpoint)
 	request, err := http.NewRequest("POST", url, body)
 	request.Header.Set("Content-Type", writer.FormDataContentType())
-	request.Header.Set("Authorization", fmt.Sprintf("Bearer %s", p.accessToken))
+	request.Header.Set("Authorization", fmt.Sprintf("Bearer %s", accessToken))
 	client := http.Client{}
 	response, err := client.Do(request)
 	if err != nil {
