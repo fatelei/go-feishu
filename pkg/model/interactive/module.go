@@ -6,6 +6,12 @@ type TextModule struct {
 	Lines 	int64 	`json:"lines,omitempty"`
 }
 
+type ContentModule struct {
+	Tag	string `json:"tag"`
+	Text *TextModule `json:"text"`
+	Fields []*Field `json:"fields,omitempty"`
+}
+
 type Field struct {
 	IsShort bool        `json:"is_short"`
 	Text 	*TextModule `json:"text"`
