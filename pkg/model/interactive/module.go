@@ -44,9 +44,13 @@ type CardConfig struct {
 	WideScreenMode	bool `json:"wide_screen_mode"`
 }
 
+type CardHeader struct {
+	Title *TextModule `json:"title"`
+}
+
 type MessageCard struct {
 	Config *CardConfig     `json:"config,omitempty"`
-	Header *TextModule     `json:"header,omitempty"`
+	Header *CardHeader     `json:"header,omitempty"`
 	Elements []interface{} `json:"elements"`
 }
 

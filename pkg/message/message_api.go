@@ -62,9 +62,11 @@ func (p *MessageAPI) SendImage(
 func (p *MessageAPI) SendInteractiveCard(
 	chatId string, title string, elements []interface{}, accessToken string) (*model.MessageAPIResponse, error) {
 	messageCard := model2.MessageCard{
-		Header: &model2.TextModule{
-			Tag:     "plain_text",
-			Content: title,
+		Header: &model2.CardHeader{
+			Title: &model2.TextModule{
+				Tag:     "plain_text",
+				Content: title,
+			},
 		},
 		Elements: elements,
 	}
