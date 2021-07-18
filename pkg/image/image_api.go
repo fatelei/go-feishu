@@ -2,6 +2,7 @@ package image
 
 import (
 	"bytes"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"github.com/fatelei/go-feishu/pkg/model"
@@ -30,6 +31,16 @@ func (p *ImageAPI) UploadFromFile(filePath string, accessToken string) (*model.I
 	}
 	defer file.Close()
 	return p.do(file, accessToken)
+}
+
+func (p *ImageAPI) UploadFromB64Encode(data string, accessToken string) (*model.Image, error) {
+	unbased, err := base64.StdEncoding.DecodeString(data)
+	if err != nil {
+		log.Fatal(err)
+		return nil, err
+	}
+	r := bytes.NewReader(unbased)
+	return p.do(r, accessToken)
 }
 
 
